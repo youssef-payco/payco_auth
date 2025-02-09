@@ -1,70 +1,83 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+## API Routes
 
-In the project directory, you can run:
+The backend exposes the following authentication endpoints under `/api/auth`:
 
-### `npm start`
+- **POST `/api/auth/login`**  
+  _Description:_ Authenticate a user using their email and password via Keycloak.  
+  _Response:_ Returns an access token, refresh token, and user email.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **POST `/api/auth/signup`**  
+  _Description:_ Create a new user in Keycloak. After creation, an email verification token is generated and emailed to the user.  
+  _Response:_ Returns a success message indicating that the verification email has been sent.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **POST `/api/auth/verify-email`**  
+  _Description:_ Verify a user's email address. The user receives a secure verification token via email. When the token is posted to this endpoint, the corresponding user’s email is marked as verified in Keycloak.  
+  _Response:_ Returns a success message upon successful verification.
 
-### `npm test`
+- **POST `/api/auth/forgot-password`**  
+  _Description:_ Generate a password reset token for a user and send a reset link via email.  
+  _Response:_ Returns a message indicating that the password reset email was sent.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **POST `/api/auth/reset-password`**  
+  _Description:_ Verify the password reset token and update the user's password in Keycloak.  
+  _Response:_ Returns a success message upon a successful password reset.
 
-### `npm run build`
+- **POST `/api/auth/logout`**  
+  _Description:_ Logout a user by invalidating their refresh token in Keycloak.  
+  _Response:_ Returns a message confirming successful logout.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Environment Variables
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The backend uses a `.env` file (located in the `/backend` directory) to manage configuration settings. Key variables include:
 
-### `npm run eject`
+- **Server & Database:**
+  - `PORT`: The port on which the server runs (default is 5000).
+  - `DATABASE_URL`: Connection string for PostgreSQL (used for session storage).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Session Security:**
+  - `SESSION_SECRET`: Secret key for Express session.
+  - `SESSION_EXPIRY`: Session expiration time in milliseconds.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Keycloak Configuration:**
+  - `KEYCLOAK_URL`: URL of your Keycloak instance.
+  - `KEYCLOAK_REALM`: The Keycloak realm (e.g., `payco-realm`).
+  - `KEYCLOAK_CLIENT_ID`: Client ID used by your application.
+  - `KEYCLOAK_CLIENT_SECRET`: Client secret for the Keycloak client.
+  - `KEYCLOAK_ADMIN_USERNAME` & `KEYCLOAK_ADMIN_PASSWORD`: Credentials for the Keycloak admin account.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **JWT & Security:**
+  - `JWT_SECRET`: A strong secret key for signing JWT tokens.
+  - `JWT_EXPIRATION`: JWT token expiration time (e.g., `1d`).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Email (SMTP) Settings:**
+  - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`: SMTP server configuration (Mailgun settings in this example).
+  - `SMTP_FROM`: The email address from which verification/reset emails are sent.
+  - `FRONTEND_URL`: URL of your React frontend (e.g., `http://localhost:5173`).
 
-## Learn More
+Make sure to update these variables with your production or development credentials as required.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Setup & Installation
+npm server.js - Terminal
+npm start - Terminal 2
+### Prerequisites
 
-### Code Splitting
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [npm](https://www.npmjs.com/)
+- A PostgreSQL database (for session storage)
+- A running Keycloak instance configured with a realm and client
+- SMTP credentials (e.g., from Mailgun) for sending emails
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Installation Steps
 
-### Analyzing the Bundle Size
+1. **Clone the Repository:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+   ```bash
+   git clone https://github.com/yourusername/PAYCO-AUTH.git
+   cd PAYCO-AUTH
